@@ -315,6 +315,8 @@ export class Game {
   }
 
   getSettingsFromURI(uri: string){
+    this.config = config;
+    return;
     let settingString;
     const split = uri.split("&")
     for(let s of split){
