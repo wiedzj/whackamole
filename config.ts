@@ -53,11 +53,11 @@ export const config: Config = {
   },
   // time: 20000,
   sprites: {
-    moleHill: "./assets/mole-hill.png",
-    ground: "./assets/grass2.jpeg",
-    mole_1: "./assets/mole1.png",
-    mole_2: "./assets/poepie.png",
-    mole_3: "./assets/kip.png"
+    moleHill: "../assets/mole-hill.png",
+    ground: "../assets/grass2.jpeg",
+    mole_1: "../assets/mole1.png",
+    mole_2: "../assets/poepie.png",
+    mole_3: "../assets/kip.png"
   },
   moles: [
     {
