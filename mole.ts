@@ -25,6 +25,9 @@ export class Mole {
 
   moleConfig: MoleType;
 
+  hitBoxWidth: number;
+  hitBoxX: number;
+
   isHit: boolean = false;
   isMissed: boolean = false;
 
@@ -37,6 +40,9 @@ export class Mole {
     this.crawlOutTime = config.crawlOutTime * speedIncrease;
     this.maxTime = config.time * speedIncrease;
     this.y = moleHill.y;
+
+    this.hitBoxWidth = moleHill.width;
+    this.hitBoxX = moleHill.x;
 
     this.moleHillHeight = moleHill.height;
 
@@ -76,8 +82,8 @@ export class Mole {
 
   getHitBox(): HitBox {
     return {
-      x1: Math.floor(this.x - 2),
-      x2: Math.floor(this.x + this.width + 2),
+      x1: Math.floor(this.hitBoxX - 2),
+      x2: Math.floor(this.hitBoxX + this.hitBoxWidth + 2),
       y1: Math.floor(this.y - 2),
       y2: Math.floor(this.y + this.height + 2)
     }
@@ -99,7 +105,6 @@ export class Mole {
       }
       case 'point': {
         Game.points += this.moleConfig.miss.amount;
-        console.log(Game.points);
         break;
       }
     }
@@ -134,7 +139,7 @@ export class Mole {
   }
 
   update(){
-    if (this.time >= this.maxTime && this.height <= this.moleHillHeight && this.isMissed === false){
+    if (this.time >= this.maxTime && this.height <= this.moleHillHeight && this.isMissed === false && this.isHit == false){
       this.miss();
     }
   }

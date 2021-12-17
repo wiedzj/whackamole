@@ -49,8 +49,6 @@ export class Game {
     window.addEventListener('resize', ()=> {
       Game.height = window.innerHeight;
       Game.width = window.innerWidth;
-      const canvas = document.getElementById("canvas");
-      Game.ctx = canvas.getContext("2d");
       Game.ctx.canvas.height = Game.height;
       Game.ctx.canvas.width = Game.width;
       });
@@ -61,7 +59,6 @@ export class Game {
     this.time = 0;
     this.moleSpawner.maxMoles = this.config.maxMoles;
     this.moleSpawner.speedMultiplyer = 1;
-    console.log(this.moleSpawner.speedMultiplyer);
     Game.lives = this.config.lives;
     Game.timeLeft = this.config.time;
     Game.points = 0;
@@ -69,12 +66,10 @@ export class Game {
     this.gameOver = false;
     this.playing = false;
     this.tapToPlay = true;
-    this.pew.ready();
   }
 
 
   public play(){
-    this.pew.gamestarted();
     this.gameLoop = setInterval(()=>{
       this.render();
       if(this.playing && !this.gameOver)
@@ -126,7 +121,9 @@ export class Game {
     })
 
     canvas.addEventListener("touchstart", (e)=> {
-      this.canvasClicked(e as TouchEvent);
+      for(let touch of e.touches){
+        this.canvasClicked(touch);
+      }
     })
 
     Game.ctx = canvas.getContext("2d");
@@ -156,31 +153,22 @@ export class Game {
     this.pew.ready();
 
     this.pew.init(this, () => {
-      this.restart;
       this.play;
     });
   }
 
-  canvasClicked(e: MouseEvent | TouchEvent){
-    if(this.gameOver && this.grid.isEmpty()){
-      this.restart();
-      return;
-    }
+  canvasClicked(e: MouseEvent | Touch){
     if(this.tapToPlay){
       this.tapToPlay = false;
       setTimeout(() => {
+        this.pew.gamestarted();
         this.playing = true;
       }, 1000)
       return;
     }
     let x: number, y: number;
-    if(e instanceof MouseEvent){
-      x = e.clientX;
-      y = Game.height - e.clientY;
-    } else {
-      x = e.touches[0].clientX;
-      y = Game.height - e.touches[0].clientY;
-    }
+    x = e.clientX;
+    y = Game.height - e.clientY;
     
     let moles = this.moleSpawner.spawnedMoles.sort((a, b)=> {return a.y - b.y})
 
@@ -253,8 +241,20 @@ export class Game {
       this.finalScore = Game.points;
       this.gameOver = true;
       this.playing = false;
+
+      setTimeout(() => {
+        this.restart();
+        this.pew.gameover(this.finalScore);
+      }, 2000)
       
-      this.pew.gameover(this.finalScore);
+      
+
+
+      setTimeout(() => {
+        this.pew.ready();
+      }, 4000)
+
+      
 
 
       return;
